@@ -1,0 +1,60 @@
+---
+title: "Projects in Statistical Learning"
+subtitle: "01 - Getting Started with Regression"
+author: "Spencer Grewe"
+date: "2023-07-16"
+format:
+  pdf:
+    fig-height: 3
+    fig-width: 5.5
+    toc: true
+    toc-title: Table of Contents
+mainfont: "SourceSansPro-Regular"
+monofont: "CascadiaMono-Regular"
+---
+
+
+## Getting Started with Regression
+```{python}
+import pandas as pd
+import numpy as np
+import sklearn
+from sklearn import linear_model
+```
+
+```{python}
+data = pd.read_csv('..\\Data_common\\student_mat.csv', sep = ';')
+```
+```{python}
+data.columns
+```
+
+
+## Multiple Linear Regression
+```{python}
+dat_copy = data[["G1", "G2", "G3", "studytime", "failures", "absences"]]
+predict = "G3"
+
+X = np.array(dat_copy.drop(columns = [predict])) # Features
+y = np.array(dat_copy[predict]) # Labels
+X.shape
+
+```
+
+```{python}
+x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size = 0.1)
+
+linearmodel = linear_model.LinearRegression()
+linearmodel.fit(x_train, y_train)
+acc = linearmodel.score(x_test, y_test)
+print(acc)
+print('Coefficient: \n', linearmodel.coef_) # These are each slope value
+print('Intercept: \n', linearmodel.intercept_) # This is the intercept
+```
+
+
+```{python}
+predicts = linearmodel.predict(x_test)
+for x in range(len(predicts)):
+    print(predicts[x], x_test[x], y_test[x])
+```

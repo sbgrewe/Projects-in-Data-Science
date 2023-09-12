@@ -1,0 +1,48 @@
+---
+title: "Walkthrough"
+subtitle: "subtitle"
+author: "Spencer Grewe"
+date: "mm-dd-yyyy"
+execute:
+  echo: true
+  message: false
+  warning: false
+format:
+  pdf:
+    fig-height: 3.25
+    fig-width: 6
+    toc: true
+    toc-title: Table of Contents
+mainfont: Source Sans Pro
+sansfont: Source Sans Pro
+monofont: CascadiaMono-Regular
+editor: visual
+jupyter: python3
+---
+
+\newpage
+
+## Part 1
+
+
+```{python}
+#| label: fig-polar
+#| fig-cap: "A line plot on a polar axis"
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+path = 
+
+
+r = np.arange(0, 2, 0.01)
+theta = 2 * np.pi * r
+fig, ax = plt.subplots(
+  subplot_kw = {'projection': 'polar'} 
+)
+ax.plot(theta, r)
+ax.set_rticks([0.5, 1, 1.5, 2])
+ax.grid(True)
+plt.show()
+```
