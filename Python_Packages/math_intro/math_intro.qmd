@@ -1,0 +1,112 @@
+---
+title: "Intro to Math in Python"
+subtitle: "subtitle"
+author: "Spencer Grewe"
+date: "mm-dd-yyyy"
+execute:
+  echo: true
+  message: false
+  warning: false
+format:
+  pdf:
+    fig-height: 3
+    fig-width: 5.5
+    toc: true
+    toc-title: Table of Contents
+mainfont: Source Sans Pro
+sansfont: Source Sans Pro
+monofont: CascadiaMono-Regular
+editor: visual
+jupyter: python3
+---
+
+```{python}
+import numpy as np
+```
+
+## Vectors
+
+## Matrices
+
+**Scalar Multiplication**
+```{python}
+A = 2
+B = [[1, 3],
+      [5, 7]]
+
+np.dot(A,B)
+```
+
+**Matrix Multiplication**
+```{python}
+A = [[6, 7],
+      [8, 9]]
+B = [[1, 3],
+      [5, 7]]
+
+np.matmul(A,B)
+
+B = np.arange(9).reshape(3,3)
+np.matmul(A,B) # throws error
+```
+
+
+**Application: Markov Chains**
+Suppose there exists a population of people $S_0$ who are resistant to changing habits after the introduction of birth control. We can represent the initial proportions of the population who resist the adoption of birth control $R$ and who have adopted birth control $A$. 
+
+$$
+\begin{align}
+S_0 &= [R\space A] \\
+&= [0.90\space 0.10]
+\end{align}
+$$
+
+A transition matrix contains the probabilities of being in a particular state and staying/switching to a new state after some constant step forward in time is allowed to occur.
+$$
+\begin{align}
+T&=
+\begin{bmatrix}
+P(R\rightarrow R) & P(R\rightarrow A) \\
+P(A\rightarrow R) & P(A\rightarrow A)
+\end{bmatrix} \\
+&= \begin{bmatrix}
+0.83 & 0.17 \\
+0.04 & 0.96
+\end{bmatrix}
+\end{align}
+$$
+
+The proportions after one step forward are simply the product of the matrix of proportions with the transition matrix:
+$$
+\begin{align}
+S_1 &= S_0\cdot T \\
+&= [0.90\space 0.10] \cdot
+      \begin{bmatrix}
+      0.83 & 0.17 \\
+      0.04 & 0.96
+      \end{bmatrix} \\
+&= [(0.9\cdot0.83 + 0.1\cdot0.04) \space (0.9\cdot 0.17 + 0.1\cdot 0.96)] \\
+&= [0.751 \space 0.249]
+\end{align}
+$$
+
+```{python}
+transit = np.array([[0.83, 0.17], 
+                    [0.04, 0.96]])
+
+d_0 = np.array([0.9, 0.1])
+d_1 = np.matmul(d_0, transit)
+d_2 = np.matmul(d_1, transit)
+d_3 = np.matmul(d_2, transit)
+
+d_3
+
+def recur_mult(s, transit, n_steps: int):
+      if n_steps <= 0:
+            return
+      elif n_steps > 1: 
+            s = recur_mult(s, transit, n_steps - 1)
+      return np.matmul(s, transit)
+
+recur_mult(d_0, transit, 3)
+```

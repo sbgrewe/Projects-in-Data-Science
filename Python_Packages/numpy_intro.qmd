@@ -1,0 +1,114 @@
+---
+title: "Intro to Numpy"
+subtitle: "subtitle"
+author: "Spencer Grewe"
+date: "mm-dd-yyyy"
+execute:
+  echo: true
+  message: false
+  warning: false
+format:
+  pdf:
+    fig-height: 3
+    fig-width: 5.5
+    toc: true
+    toc-title: Table of Contents
+mainfont: Source Sans Pro
+sansfont: Source Sans Pro
+monofont: CascadiaMono-Regular
+editor: visual
+jupyter: python3
+---
+
+## References
+Roughly following the lessons published in [Python for Data Science](https://jakevdp.github.io/PythonDataScienceHandbook/). Other works include [Python for Data Analysis](https://wesmckinney.com/book/) and [Python Programming and Numerical Methods](https://pythonnumericalmethods.berkeley.edu/notebooks/Index.html).
+
+\newpage
+## Numpy - Numerical Power in Python 
+```{python}
+import numpy as np
+```
+
+#### Primer: Data Types and Structures
+The smallest particle of data stored in a computer is called *atomic data*. Atomic data are familiar: a single number, a single character, or a truth value - most atomic data can be considered a single cell in a spreadsheet.
+
+In python, atomic data are stored as objects in the C language that the python language is "wrapped around". This means that for even atomic data in python, like a single integer value, there are always multiple pieces of information directly associated with it (eg. value, type, location in memory, and number of things referring to it). The fact that every value has a few pieces of information attached to itis what makes python a flexible and dynamically typed language, but it has painful effects on its speed compared to other state of the art languages. 
+
+We can see the value of numpy by recording the amount of time it takes (using `%timeit`) to perform a simple operation on a list of one million integers using base python and numpy.
+```{python}
+from timeit import timeit
+my_arr = np.arange(1_000_000)
+my_list = list(range(1_000_000))
+
+%timeit my_arr2 = my_arr * 2
+%timeit my_list2 = [x * 2 for x in my_list]
+```
+
+It takes about 40 times longer to use a python list versus a numpy range. Why?
+
+In python: 
+- We make a list and populate it with integers. Because lists can contain most types of data and can mix data, python will check *every item* to make sure it is a type which can be squared (like an int or float).
+- We make the list in the most memory efficient way possible - as a discontinuous linked list. This is not great for access times.
+
+In numpy:
+- We make a range and declare up front it will be all integers (limiting the amount of valid operations you can carry out). It can square every item without double checking.
+- Numpy will also put all the items in the same place in memory, taking even less time to access the points in memory.
+
+![](../Attachments/array_vs_list.png)
+
+A one dimensional array of data with a single type is called a *fixed-type array*. A fixed-type array can be created in numpy by spelling out a list or by using list-building notation.
+
+```{python}
+np.array([1, 4, 2, 5, 3])
+np.array([range(i, i + 3) for i in [2, 4, 6]])
+```
+
+NP arrays can also be multidimensional, as in the second example.
+
+```{python}
+np.array([3.14, 4, 2, 3])
+type(np.array([3.14, 4, 2, 3])[2])
+
+np.array([3.14, 4, 2, 3], dtype = 'uint8')
+np.array([1, 2, 3, 4], dtype='float32')
+```
+
+Note in the first example that the array became entirely decimals (64 bit floating point numbers to be precise) - this is because np will change the type of every item to fit the item with the "most information" associated with it in a process called *upcasting*. We have the ability to coerce the items in the array into a certain type using the `dtype` function.
+
+```{python}
+big_arr = np.arange(50_000, dtype='uint64')
+small_arr = np.arange(50_000, dtype='uint16')
+
+big_arr[49_990:50_000]
+small_arr[49_990:50_000]
+
+big_arr.nbytes
+small_arr.nbytes
+
+2**16 # max value that a uint16 can take
+2**64 # max value that a uint64 can take -- overkill!
+```
+The clear benefit to concerning ourselves with the types of items in an array is that we can get away with using far less memory for some types of data. The default is to use 64 bits (8 bytes) of memory, but there are many variables which can be described in far less memory.
+
+
+
+
+```{python}
+#| label: fig-polar
+#| fig-cap: "A line plot on a polar axis"
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# path =
+
+r = np.arange(0, 2, 0.01)
+theta = 2 * np.pi * r
+fig, ax = plt.subplots(
+  subplot_kw = {'projection': 'polar'} 
+)
+ax.plot(theta, r)
+ax.set_rticks([0.5, 1, 1.5, 2])
+ax.grid(True)
+plt.show()
+```

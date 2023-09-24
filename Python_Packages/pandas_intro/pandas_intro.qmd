@@ -1,0 +1,89 @@
+---
+title: "Intro to Pandas"
+author: "Spencer Grewe"
+date: "mm-dd-yyyy"
+execute:
+  echo: true
+  message: false
+  warning: false
+format:
+  html:
+    fig-height: 3
+    fig-width: 5.5
+    toc: true
+    toc-title: Table of Contents
+mainfont: Source Sans Pro
+sansfont: Source Sans Pro
+monofont: Cascadia Mono Light
+editor: visual
+jupyter: python3
+---
+
+## The Structures of Data
+
+Atomic data combine to form data structures - objects of a particular class which have the ability to hold, retrieve, and sometimes change bundles of atomic data contained within.
+
+The two most important classes of data structures in pandas are the **Series** and the **DataFrame**. 
+
+## Series
+The series object is a one-dimension array of data, and like an `np.array([])`, a Series can be formed from a python list.
+
+```{python}
+import pandas as pd
+
+data = pd.Series([0.1, 0.3, 0.6, 1.0])
+data
+```
+
+Some information can be gleaned from just running the data series as is - we learn what values are contained in it and their order, and also that pandas has chosen to store each data value as a 64 bit float. 
+
+```{python}
+data.values
+
+data[1] # value at index 1
+data[1:3] # values starting at index 1 and ending before 3
+```
+
+
+#### Index Definition
+We saw when running `data` that each value in the series had an associated index. In data analysis, we might want to avoid using numbers as aliases for row IDs, especially if we have a better way to describe where observations have come from.
+```{python}
+data2 = pd.Series([0.25, 0.5, 0.75, 1.0],
+                 index=['a', 'b', 'c', 'd'])
+data2
+data2[['b', 'c']]
+```
+
+```{python}
+population_dict = {'California': 38332521,
+                   'New York': 19651127,
+                   'Florida': 19552860,
+                   'Texas': 26448193,
+                   'Illinois': 12882135}
+population = pd.Series(population_dict)
+population
+population['Florida']
+population['Texas':'Florida']
+```
+
+We can assign aliases for each observation by either passing a list called `index` with the same length as the values into `Series()`, or passing the data into `Series()` as a dictionary. From there, we can call up specific entries like earlier by name or by slicing with a list.
+
+```{python}
+pd.Series( {2:'a', 1:'b', 3:'c'} )
+```
+
+When passing in a dictionary, the order of the rows is determined by the keys, then the values, whichever makes sense. In the population case, it was ordered descending by population (by values).
+
+## DataFrames
+A DataFrame is a two-dimension array of data with flexibility around data types, column and row labels. Like typical 2d tables of observations, each column is a variable, and each row is an observation.
+
+```{python}
+area_dict = {'California': 423967, 'Texas': 695662, 'New York': 141297, 'Florida': 170312, 'Illinois': 149995}
+area = pd.Series(area_dict)
+
+states = pd.DataFrame({'population': population, 'area': area})
+states
+
+states.index
+states.columns
+```

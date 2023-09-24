@@ -9,8 +9,8 @@ execute:
   warning: false
 format:
   pdf:
-    fig-height: 3.25
-    fig-width: 6
+    fig-height: 3
+    fig-width: 5.5
     toc: true
     toc-title: Table of Contents
 mainfont: Source Sans Pro
@@ -32,9 +32,6 @@ jupyter: python3
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-
-path = 
-
 
 r = np.arange(0, 2, 0.01)
 theta = 2 * np.pi * r
